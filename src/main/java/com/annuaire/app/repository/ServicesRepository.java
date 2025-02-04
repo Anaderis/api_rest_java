@@ -122,7 +122,7 @@ public class ServicesRepository {
     // DELETE delete()
 
     public int delete(Long id) {
-        String sql = "DELETE FROM T_SERVICE_SER WHERE SER_id = ?";
+        String sql = "DELETE FROM T_SERVICE_SER WHERE ser_id = ?";
         return jdbcTemplate.update(sql, id);
     }
 
