@@ -1,5 +1,6 @@
 package com.annuaire.app.modele;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,42 +15,37 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-
+@JsonInclude(JsonInclude.Include.NON_NULL) // Exclure les propriétés null (les objets site et services)
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "emp_id")
+    //@Column(name = "emp_id")
     private Long id;
-    @Column(name = "emp_name")
+
     private String name;
-    @Column(name = "emp_surname")
     private String surname;
-    @Column(name = "emp_email")
     private String email;
-    @Column(name = "emp_address")
     private String address;
-    @Column(name = "emp_postcode")
     private String postcode;
-    @Column(name = "emp_entryDate")
     private Date entrydate;
-    @Column(name = "emp_city")
     private String city;
-    @Column(name = "emp_admin")
     private Boolean admin;
-    @Column(name = "emp_mobile")
     private String mobile;
-    @Column(name = "emp_phone")
     private String phone;
-    @Column(name = "emp_login")
     private String login;
-    @Column(name = "emp_password")
     private String password;
-    @Column(name = "emp_photo")
     private String photo;
+
+    private Long siteId; // ID du site
+    private Long servicesId; // ID du service
 
     @ManyToOne
     @JoinColumn(name="sit_id")
     private Site site;
+
+    @ManyToOne
+    @JoinColumn(name="ser_id")
+    private Services services;
 
     public Long getId() {
         return id;
@@ -163,11 +159,35 @@ public class Employee {
         this.photo = photo;
     }
 
+    public Long getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
+    }
+
+    public Long getServicesId() {
+        return servicesId;
+    }
+
+    public void setServicesId(Long servicesId) {
+        this.servicesId = servicesId;
+    }
+
     public Site getSite() {
         return site;
     }
 
     public void setSite(Site site) {
         this.site = site;
+    }
+
+    public Services getServices() {
+        return services;
+    }
+
+    public void setServices(Services services) {
+        this.services = services;
     }
 }

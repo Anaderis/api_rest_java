@@ -16,13 +16,13 @@ import lombok.Setter;
 public class Services {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ser_id")
+    //@Column(name = "ser_id")
     private Long id;
-    @Column(name = "ser_name")
+    //@Column(name = "ser_name")
     private String name;
-    @Column(name = "ser_headcount")
+    //@Column(name = "ser_headcount")
     private int  headcount;
-    @Column(name = "ser_description")
+    //@Column(name = "ser_description")
     private String description;
 
     public Long getId() {

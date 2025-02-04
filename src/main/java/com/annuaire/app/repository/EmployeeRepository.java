@@ -23,9 +23,16 @@ public class EmployeeRepository {
 
     //READ - read
     public List<Employee> read() {
-        String sql = "SELECT e.*, s.* FROM T_EMPLOYEE_EMP e LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id";
+        String sql = """
+        SELECT e.*, s.*, serv.* 
+        FROM T_EMPLOYEE_EMP e 
+        LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id 
+        LEFT JOIN T_SERVICE_SER serv ON e.ser_id = serv.ser_id
+        """;
+
         return jdbcTemplate.query(sql, new EmployeeRowMapper());
     }
+
 
 
     //READ - by Id
@@ -34,17 +41,23 @@ public class EmployeeRepository {
             throw new IllegalArgumentException("L'ID ne peut pas être null");
         }
 
-        String sql = "SELECT e.*, s.* FROM T_EMPLOYEE_EMP e LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id WHERE e.emp_id = ?";
+        String sql = """
+        SELECT e.*, s.*, serv.* 
+        FROM T_EMPLOYEE_EMP e 
+        LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id 
+        LEFT JOIN T_SERVICE_SER serv ON e.ser_id = serv.ser_id 
+        WHERE e.emp_id = ?
+        """;
 
-        // Utilisation du RowMapper pour convertir chaque ligne en objet Employee
         List<Employee> employeeList = jdbcTemplate.query(sql, new EmployeeRowMapper(), id);
 
         if (employeeList.isEmpty()) {
-            return null;  // Aucun employee trouvé, retourner null
+            return null;  // Aucun employee trouvé, retourne null
         }
 
-        return employeeList.get(0);  // Retourner le premier employee trouvé
+        return employeeList.get(0);  // Retourne le premier employee trouvé
     }
+
 
 
     private static class EmployeeRowMapper implements RowMapper<Employee> {
@@ -58,7 +71,7 @@ public class EmployeeRepository {
             employee.setAddress(rs.getString("emp_address"));
             employee.setPostcode(rs.getString("emp_postcode"));
             employee.setCity(rs.getString("emp_city"));
-            employee.setEntrydate(rs.getDate("emp_entryDate"));
+            employee.setEntrydate(rs.getDate("emp_entrydate"));
             employee.setPhone(rs.getString("emp_phone"));
             employee.setAdmin(rs.getBoolean("emp_admin"));
             employee.setMobile(rs.getString("emp_mobile"));
@@ -66,30 +79,24 @@ public class EmployeeRepository {
             employee.setPassword(rs.getString("emp_password"));
             employee.setPhoto(rs.getString("emp_photo"));
 
-            // Récupérer les informations du site
-            Long siteId = rs.getLong("sit_id");
-            if (!rs.wasNull()) { // Vérifie si la clé étrangère n'est pas null
-                Site site = new Site();
-                site.setId(siteId);
-                site.setName(rs.getString("sit_name")); // Supposons que vous avez joint la table Site
-                site.setCity(rs.getString("sit_city"));
-                site.setSiret(rs.getString("sit_siret"));
-                site.setAddress(rs.getString("sit_address"));
-                site.setPostcode(rs.getString("sit_postcode"));
-                site.setEmail(rs.getString("sit_email"));
-                site.setPhone(rs.getString("sit_phone"));
-                employee.setSite(site);
-            }
+            // Création des objets Site et Service
+            Site site = new Site();
+            site.setId(rs.getLong("sit_id"));
+            site.setName(rs.getString("sit_name"));
+            employee.setSite(site);
+
+            Services services = new Services();
+            services.setId(rs.getLong("ser_id"));
+            services.setName(rs.getString("ser_name"));
+            employee.setServices(services);
 
             return employee;
         }
     }
 
-
     //UPDATE update()
 
     public int update(Long id, Employee employee) {
-        // Vérification des paramètres
         if (id == null || employee == null) {
             throw new IllegalArgumentException("L'id et l'employee ne doivent pas être null !");
         }
@@ -123,7 +130,7 @@ public class EmployeeRepository {
             params.add(employee.getCity());
         }
         if (employee.getEntrydate() != null) {
-            sqlParts.add("emp_entryDate = ?");
+            sqlParts.add("emp_entrydate = ?");
             params.add(employee.getEntrydate());
         }
         if (employee.getPhone() != null) {
@@ -150,34 +157,36 @@ public class EmployeeRepository {
             sqlParts.add("emp_photo = ?");
             params.add(employee.getPhoto());
         }
+        // Vérification des relations (site et services)
+        if (employee.getSite() != null && employee.getSite().getId() != null) {
+            sqlParts.add("sit_id = ?");
+            params.add(employee.getSite().getId());
+        }
+
+        if (employee.getServices() != null && employee.getServices().getId() != null) {
+            sqlParts.add("ser_id = ?");
+            params.add(employee.getServices().getId());
+        }
 
 
-        // Si aucun champ à mettre à jour, renvoyer une erreur
+
         if (sqlParts.isEmpty()) {
             throw new IllegalArgumentException("Aucun champ à mettre à jour !");
         }
 
-        // Construction de la requête SQL en combinant les fragments
         String sql = "UPDATE T_EMPLOYEE_EMP SET " + String.join(", ", sqlParts) + " WHERE emp_id = ?";
         params.add(id);
 
-        System.out.println("SQL: " + sql);
-        System.out.println("Params: " + params);
-
-
-        // Exécution de la requête avec les paramètres
         return jdbcTemplate.update(sql, params.toArray());
     }
 
+
     // CREATE - create()
-    //On met 3 guillemets quand il s'agit d'une chaîne de caractères multiligne ça commence à faire beaucoup de guillemets
     public Employee create(Employee employee) {
         String sql = """
-    INSERT INTO T_EMPLOYEE_EMP (emp_name, emp_surname, emp_email, emp_address, emp_postcode, emp_city, emp_entrydate, emp_phone, emp_admin, emp_mobile, emp_login, emp_password, emp_photo) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO T_EMPLOYEE_EMP (emp_name, emp_surname, emp_email, emp_address, emp_postcode, emp_city, emp_entrydate, emp_phone, emp_admin, emp_mobile, emp_login, emp_password, emp_photo, sit_id, ser_id) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """;
-
-        System.out.println("Inserting employee with name: " + employee.getName() + ", prénom: " + employee.getSurname());
 
         jdbcTemplate.update(sql,
                 employee.getName(),
@@ -192,12 +201,14 @@ public class EmployeeRepository {
                 employee.getMobile(),
                 employee.getLogin(),
                 employee.getPassword(),
-                employee.getPhoto()
-
+                employee.getPhoto(),
+                employee.getSiteId(),   // Ajouter l'ID du site
+                employee.getServicesId()  // Ajouter l'ID du service
         );
 
         return employee;
     }
+
 
 
     // DELETE delete()
