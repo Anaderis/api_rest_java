@@ -18,21 +18,21 @@ import java.util.Date;
 public class Site {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "sit_id")
+    //@Column(name = "sit_id")
     private Long id;
-    @Column(name = "sit_name")
+    //@Column(name = "sit_name")
     private String name;
-    @Column(name = "sit_city")
+    //@Column(name = "sit_city")
     private String city;
-    @Column(name = "sit_siret")
+    //@Column(name = "sit_siret")
     private String siret;
-    @Column(name = "sit_address")
+    //@Column(name = "sit_address")
     private String address;
-    @Column(name = "sit_postcode")
+    //@Column(name = "sit_postcode")
     private String postcode;
-    @Column(name = "sit_email")
+    //@Column(name = "sit_email")
     private String email;
-    @Column(name = "sit_phone")
+    //@Column(name = "sit_phone")
     private String phone;
 
     public Long getId() {

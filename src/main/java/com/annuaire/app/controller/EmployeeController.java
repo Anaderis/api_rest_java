@@ -19,10 +19,19 @@ public class EmployeeController {
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
-    @PostMapping("/create")
-    //Post Mapping permet de faire le lien avec une requête HTTP, ici /create
-    //RequestBody permet de récupérer le body au niveau de la requête
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Employee loginRequest) {
+        Employee employee = employeeService.readByLogin(loginRequest.getLogin());
+
+        if (employee != null && employee.getPassword().equals(loginRequest.getPassword())) {
+            return ResponseEntity.ok(employee); // Retourne directement l'employé
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login ou mot de passe incorrect.");
+    }
+
+    @PostMapping("/create")
     public Employee create(@RequestBody Employee employee) {
 
         return employeeService.create(employee);

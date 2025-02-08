@@ -15,6 +15,9 @@ public interface EmployeeService {
     //CRUD : READ by Id
     Employee readById(Long id);
 
+    //CRUD : READ by Login
+    Employee readByLogin(String login);
+
     //CRUD : Update
     Employee update(Long id, Employee employee);
 
