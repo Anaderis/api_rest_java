@@ -43,6 +43,7 @@ public class EmployeeController {
         return employeeService.read();
     }
 
+    /*------------------------------READ BY EMPLOYEE ID ---------------------------------*/
     @GetMapping("/read/{id}")
     public ResponseEntity<Employee> readById(@PathVariable Long id) {
         if (id == null) {
@@ -50,6 +51,36 @@ public class EmployeeController {
         }
 
         Employee employee = employeeService.readById(id);
+        if (employee == null) {
+            return ResponseEntity.notFound().build(); // Retourne un 404 si le produit n'est pas trouvé
+        }
+
+        return ResponseEntity.ok(employee); // Retourne un 200 avec le produit trouvé
+    }
+
+    /*------------------------------READ EMPLOYEES BY SITE ID ---------------------------------*/
+    @GetMapping("/readBySite/{id}")
+    public ResponseEntity<Employee> readBySite(@PathVariable Long siteId) {
+        if (siteId == null) {
+            return ResponseEntity.badRequest().build(); // Retourne un 400 si l'ID est null
+        }
+
+        Employee employee = employeeService.readBySite(siteId);
+        if (employee == null) {
+            return ResponseEntity.notFound().build(); // Retourne un 404 si le produit n'est pas trouvé
+        }
+
+        return ResponseEntity.ok(employee); // Retourne un 200 avec le produit trouvé
+    }
+
+    /*------------------------------READ EMPLOYEES BY SERVICE ID ---------------------------------*/
+    @GetMapping("/readByService/{id}")
+    public ResponseEntity<Employee> readByService(@PathVariable Long servicesId) {
+        if (servicesId == null) {
+            return ResponseEntity.badRequest().build(); // Retourne un 400 si l'ID est null
+        }
+
+        Employee employee = employeeService.readByService(servicesId);
         if (employee == null) {
             return ResponseEntity.notFound().build(); // Retourne un 404 si le produit n'est pas trouvé
         }

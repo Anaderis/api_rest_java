@@ -81,6 +81,50 @@ public class EmployeeRepository {
         return employeeList.get(0);  // Retourne le premier employee trouvé
     }
 
+    public Employee readByService(Long servicesId) {
+        if (servicesId == null) {
+            throw new IllegalArgumentException("L'id ne peut pas être vide");
+        }
+
+        String sql = """
+        SELECT e.*, s.*, serv.*
+        FROM T_EMPLOYEE_EMP e
+        LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id
+        LEFT JOIN T_SERVICE_SER serv ON e.ser_id = serv.ser_id
+        WHERE e.ser_id = ?
+        """;
+
+        List<Employee> employeeList = jdbcTemplate.query(sql, new EmployeeRowMapper(), servicesId);
+
+        if (employeeList.isEmpty()) {
+            return null;  // Aucun employee trouvé, retourne null
+        }
+
+        return employeeList.get(0);  // Retourne le premier employee trouvé
+    }
+
+    public Employee readBySite(Long siteId) {
+        if (siteId == null) {
+            throw new IllegalArgumentException("L'id ne peut pas être vide");
+        }
+
+        String sql = """
+        SELECT e.*, serv.* , s.*
+        FROM T_EMPLOYEE_EMP e
+        LEFT JOIN T_SERVICE_SER serv ON e.ser_id = serv.ser_id
+        LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id
+        WHERE e.sit_id = ?
+        """;
+
+        List<Employee> employeeList = jdbcTemplate.query(sql, new EmployeeRowMapper(), siteId);
+
+        if (employeeList.isEmpty()) {
+            return null;  // Aucun employee trouvé, retourne null
+        }
+
+        return employeeList.get(0);  // Retourne le premier employee trouvé
+    }
+
 
 
     private static class EmployeeRowMapper implements RowMapper<Employee> {

@@ -48,6 +48,20 @@ public class EmployeeServiceImplement implements EmployeeService {
         return employeeRepository.readByLogin(login);
     }
 
+    public Employee readByService(String servicesId){
+        if (servicesId == null) {
+            throw new IllegalArgumentException("L'id ne peut pas être vide");
+        }
+        return employeeRepository.readByLogin(servicesId);
+    }
+
+    public Employee readBySite(String siteId){
+        if (siteId == null) {
+            throw new IllegalArgumentException("L'id ne peut pas être vide");
+        }
+        return employeeRepository.readByLogin(siteId);
+    }
+
     @Transactional
     public Employee update(Long id, Employee employee) {
         int updateEmployee = employeeRepository.update(id, employee);
