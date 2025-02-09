@@ -48,18 +48,18 @@ public class EmployeeServiceImplement implements EmployeeService {
         return employeeRepository.readByLogin(login);
     }
 
-    public Employee readByService(String servicesId){
+    public Employee readByService(Long servicesId){
         if (servicesId == null) {
             throw new IllegalArgumentException("L'id ne peut pas être vide");
         }
-        return employeeRepository.readByLogin(servicesId);
+        return employeeRepository.readByService(servicesId);
     }
 
-    public Employee readBySite(String siteId){
+    public Employee readBySite(Long siteId){
         if (siteId == null) {
             throw new IllegalArgumentException("L'id ne peut pas être vide");
         }
-        return employeeRepository.readByLogin(siteId);
+        return employeeRepository.readBySite(siteId);
     }
 
     @Transactional
