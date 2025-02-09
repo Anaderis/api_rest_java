@@ -58,36 +58,37 @@ public class EmployeeController {
         return ResponseEntity.ok(employee); // Retourne un 200 avec le produit trouvé
     }
 
-    /*------------------------------READ EMPLOYEES BY SITE ID ---------------------------------*/
-    @GetMapping("/readBySite/{id}")
-    public ResponseEntity<Employee> readBySite(@PathVariable Long siteId) {
+    /*------------------------------ READ EMPLOYEES BY SITE ID ---------------------------------*/
+    @GetMapping("/readBySite/{siteId}")
+    public ResponseEntity<List<Employee>> readBySite(@PathVariable Long siteId) {
         if (siteId == null) {
             return ResponseEntity.badRequest().build(); // Retourne un 400 si l'ID est null
         }
 
-        Employee employee = employeeService.readBySite(siteId);
-        if (employee == null) {
-            return ResponseEntity.notFound().build(); // Retourne un 404 si le produit n'est pas trouvé
+        List<Employee> employees = employeeService.readBySite(siteId);
+        if (employees == null || employees.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Retourne un 404 si aucun employé trouvé
         }
 
-        return ResponseEntity.ok(employee); // Retourne un 200 avec le produit trouvé
+        return ResponseEntity.ok(employees); // Retourne un 200 avec la liste des employés trouvés
     }
 
-    /*------------------------------READ EMPLOYEES BY SERVICE ID ---------------------------------*/
-    @GetMapping("/readByService/{id}")
-    public ResponseEntity<Employee> readByService(@PathVariable Long servicesId) {
+    /*------------------------------ READ EMPLOYEES BY SERVICE ID ---------------------------------*/
+    @GetMapping("/readByService/{servicesId}")
+    public ResponseEntity<List<Employee>> readByService(@PathVariable Long servicesId) {
         if (servicesId == null) {
             return ResponseEntity.badRequest().build(); // Retourne un 400 si l'ID est null
         }
 
-        Employee employee = employeeService.readByService(servicesId);
-        if (employee == null) {
-            return ResponseEntity.notFound().build(); // Retourne un 404 si le produit n'est pas trouvé
+        List<Employee> employees = employeeService.readByService(servicesId);
+        if (employees == null || employees.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Retourne un 404 si aucun employé trouvé
         }
 
-        return ResponseEntity.ok(employee); // Retourne un 200 avec le produit trouvé
+        return ResponseEntity.ok(employees); // Retourne un 200 avec la liste des employés trouvés
     }
 
+    /*------------------------------ UPDATE EMPLOYEE ---------------------------------*/
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Employee employee) {
         try {

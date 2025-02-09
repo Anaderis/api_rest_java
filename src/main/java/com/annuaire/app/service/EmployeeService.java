@@ -19,10 +19,10 @@ public interface EmployeeService {
     Employee readByLogin(String login);
 
     //CRUD : Read by Service
-    Employee readByService(Long servicesId);
+    List<Employee> readByService(Long servicesId);
 
     //CRUD : Read by Site
-    Employee readBySite(Long siteId);
+    List<Employee> readBySite(Long siteId);
 
     //CRUD : Update
     Employee update(Long id, Employee employee);
