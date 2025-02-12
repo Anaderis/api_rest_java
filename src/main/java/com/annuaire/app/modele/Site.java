@@ -7,17 +7,14 @@ import lombok.Setter;
 
 import java.util.Date;
 
-@Entity
-@Table(name="t_site_sit")
+//@Entity
+//@Table(name="t_site_sit")
 //Entity permet de mapper la table Produit avec la table dans la BDD correspondante
 
-@Getter
-@Setter
-@NoArgsConstructor
 
 public class Site {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     //@Column(name = "sit_id")
     private Long id;
     //@Column(name = "sit_name")

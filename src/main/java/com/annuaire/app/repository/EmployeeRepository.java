@@ -31,6 +31,7 @@ public class EmployeeRepository {
         """;
 
         return jdbcTemplate.query(sql, new EmployeeRowMapper());
+
     }
 
 
@@ -90,11 +91,11 @@ public class EmployeeRepository {
         String sql = """
         SELECT e.*, s.*, serv.*
         FROM T_EMPLOYEE_EMP e
-        LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id
-        LEFT JOIN T_SERVICE_SER serv ON e.ser_id = serv.ser_id
+        LEFT JOIN T_SITE_SIT s ON s.sit_id = e.sit_id
+        LEFT JOIN T_SERVICE_SER serv ON serv.ser_id = e.ser_id
         WHERE e.ser_id = ?
         """;
-
+        System.out.println(servicesId);
         return jdbcTemplate.query(sql, new EmployeeRowMapper(), servicesId);
     }
 
@@ -109,7 +110,7 @@ public class EmployeeRepository {
         FROM T_EMPLOYEE_EMP e
         LEFT JOIN T_SERVICE_SER serv ON e.ser_id = serv.ser_id
         LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id
-        WHERE e.sit_id = ?
+        WHERE s.sit_id = ?
         """;
 
         return jdbcTemplate.query(sql, new EmployeeRowMapper(), siteId);
@@ -137,17 +138,6 @@ public class EmployeeRepository {
             employee.setPassword(rs.getString("emp_password"));
             employee.setPhoto(rs.getString("emp_photo"));
             employee.setAdminPassword(rs.getString("emp_admin_password"));
-
-            // Création des objets Site et Service
-            Site site = new Site();
-            site.setId(rs.getLong("sit_id"));
-            site.setName(rs.getString("sit_name"));
-            employee.setSite(site);
-
-            Services services = new Services();
-            services.setId(rs.getLong("ser_id"));
-            services.setName(rs.getString("ser_name"));
-            employee.setServices(services);
 
             return employee;
         }
@@ -220,16 +210,6 @@ public class EmployeeRepository {
             sqlParts.add("emp_admin_password = ?");
             params.add(employee.getAdminPassword());
         }
-        // Vérification des relations (site et services)
-        if (employee.getSite() != null && employee.getSite().getId() != null) {
-            sqlParts.add("sit_id = ?");
-            params.add(employee.getSite().getId());
-        }
-
-        if (employee.getServices() != null && employee.getServices().getId() != null) {
-            sqlParts.add("ser_id = ?");
-            params.add(employee.getServices().getId());
-        }
 
         if (sqlParts.isEmpty()) {
             throw new IllegalArgumentException("Aucun champ à mettre à jour !");
@@ -270,7 +250,6 @@ public class EmployeeRepository {
 
         return employee;
     }
-
 
 
     // DELETE delete()

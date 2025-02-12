@@ -69,7 +69,7 @@ public class EmployeeController {
         if (employees == null || employees.isEmpty()) {
             return ResponseEntity.notFound().build(); // Retourne un 404 si aucun employé trouvé
         }
-
+        System.out.println(siteId);
         return ResponseEntity.ok(employees); // Retourne un 200 avec la liste des employés trouvés
     }
 

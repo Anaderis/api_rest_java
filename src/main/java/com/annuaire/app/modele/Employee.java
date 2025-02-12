@@ -8,17 +8,14 @@ import lombok.Setter;
 
 import java.util.Date;
 
-@Entity
-@Table(name="t_employee_emp")
+//@Entity
+//@Table(name="t_employee_emp")
 //Entity permet de mapper la table Produit avec la table dans la BDD correspondante
 
-@Getter
-@Setter
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL) // Exclure les propriétés null (les objets site et services)
 public class Employee {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     //@Column(name = "emp_id")
     private Long id;
 
@@ -40,18 +37,9 @@ public class Employee {
     private Long siteId; // ID du site
     private Long servicesId; // ID du service
 
-    @ManyToOne
-    @JoinColumn(name="sit_id")
-    private Site site;
-
-    @ManyToOne
-    @JoinColumn(name="ser_id")
-    private Services services;
-
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -175,28 +163,11 @@ public class Employee {
     public void setSiteId(Long siteId) {
         this.siteId = siteId;
     }
-
     public Long getServicesId() {
         return servicesId;
     }
-
     public void setServicesId(Long servicesId) {
         this.servicesId = servicesId;
     }
 
-    public Site getSite() {
-        return site;
-    }
-
-    public void setSite(Site site) {
-        this.site = site;
-    }
-
-    public Services getServices() {
-        return services;
-    }
-
-    public void setServices(Services services) {
-        this.services = services;
-    }
 }

@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name="t_service_ser")
+//@Entity
+//@Table(name="t_service_ser")
 //Entity permet de mapper la table Produit avec la table dans la BDD correspondante
 
 @Getter
@@ -14,9 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class Services {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@Column(name = "ser_id")
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //Column(name = "ser_id")
     private Long id;
     //@Column(name = "ser_name")
     private String name;
