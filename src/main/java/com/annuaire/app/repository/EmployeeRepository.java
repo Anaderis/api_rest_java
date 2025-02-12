@@ -59,9 +59,9 @@ public class EmployeeRepository {
     }
 
     //Read by Login
-    public Employee readByLogin(String login) {
-        if (login == null) {
-            throw new IllegalArgumentException("Le login ne peut pas être vide");
+    public Employee readByLogin(String login, String password) {
+        if (login == null || password == null) {
+            throw new IllegalArgumentException("Le login et le mot de passe ne peuvent pas être vides");
         }
 
         String sql = """
@@ -69,10 +69,10 @@ public class EmployeeRepository {
         FROM T_EMPLOYEE_EMP e 
         LEFT JOIN T_SITE_SIT s ON e.sit_id = s.sit_id 
         LEFT JOIN T_SERVICE_SER serv ON e.ser_id = serv.ser_id 
-        WHERE e.emp_login = ?
+        WHERE e.emp_login = ? AND e.emp_password = ?
         """;
 
-        List<Employee> employeeList = jdbcTemplate.query(sql, new EmployeeRowMapper(), login);
+        List<Employee> employeeList = jdbcTemplate.query(sql, new EmployeeRowMapper(), login, password);
 
         if (employeeList.isEmpty()) {
             return null;  // Aucun employee trouvé, retourne null
@@ -136,6 +136,7 @@ public class EmployeeRepository {
             employee.setLogin(rs.getString("emp_login"));
             employee.setPassword(rs.getString("emp_password"));
             employee.setPhoto(rs.getString("emp_photo"));
+            employee.setAdminPassword(rs.getString("emp_admin_password"));
 
             // Création des objets Site et Service
             Site site = new Site();
@@ -215,6 +216,10 @@ public class EmployeeRepository {
             sqlParts.add("emp_photo = ?");
             params.add(employee.getPhoto());
         }
+        if (employee.getAdminPassword() != null) {
+            sqlParts.add("emp_admin_password = ?");
+            params.add(employee.getAdminPassword());
+        }
         // Vérification des relations (site et services)
         if (employee.getSite() != null && employee.getSite().getId() != null) {
             sqlParts.add("sit_id = ?");
@@ -225,8 +230,6 @@ public class EmployeeRepository {
             sqlParts.add("ser_id = ?");
             params.add(employee.getServices().getId());
         }
-
-
 
         if (sqlParts.isEmpty()) {
             throw new IllegalArgumentException("Aucun champ à mettre à jour !");
@@ -242,8 +245,8 @@ public class EmployeeRepository {
     // CREATE - create()
     public Employee create(Employee employee) {
         String sql = """
-    INSERT INTO T_EMPLOYEE_EMP (emp_name, emp_surname, emp_email, emp_address, emp_postcode, emp_city, emp_entrydate, emp_phone, emp_admin, emp_mobile, emp_login, emp_password, emp_photo, sit_id, ser_id) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO T_EMPLOYEE_EMP (emp_name, emp_surname, emp_email, emp_address, emp_postcode, emp_city, emp_entrydate, emp_phone, emp_admin, emp_admin_password, emp_mobile, emp_login, emp_password, emp_photo, sit_id, ser_id) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """;
 
         jdbcTemplate.update(sql,
@@ -256,6 +259,7 @@ public class EmployeeRepository {
                 employee.getEntrydate(),
                 employee.getPhone(),
                 employee.getAdmin(),
+                employee.getAdminPassword(),
                 employee.getMobile(),
                 employee.getLogin(),
                 employee.getPassword(),

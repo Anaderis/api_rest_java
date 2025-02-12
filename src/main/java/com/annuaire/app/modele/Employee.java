@@ -30,6 +30,7 @@ public class Employee {
     private Date entrydate;
     private String city;
     private Boolean admin;
+    private String adminPassword;
     private String mobile;
     private String phone;
     private String login;
@@ -61,6 +62,14 @@ public class Employee {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+
+    public void setAdminPassword(String adminPassword) {
+        this.adminPassword = adminPassword;
     }
 
     public String getSurname() {

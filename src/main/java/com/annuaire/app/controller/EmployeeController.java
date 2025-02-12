@@ -22,9 +22,9 @@ public class EmployeeController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Employee loginRequest) {
-        Employee employee = employeeService.readByLogin(loginRequest.getLogin());
+        Employee employee = employeeService.readByLogin(loginRequest.getLogin(), loginRequest.getPassword());
 
-        if (employee != null && employee.getPassword().equals(loginRequest.getPassword())) {
+        if (employee != null && employee.getPassword().equals(loginRequest.getPassword()) && employee.getLogin().equals(loginRequest.getLogin())) {
             return ResponseEntity.ok(employee); // Retourne directement l'employé
         }
 

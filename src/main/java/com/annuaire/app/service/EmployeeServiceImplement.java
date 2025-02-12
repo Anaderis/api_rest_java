@@ -41,11 +41,11 @@ public class EmployeeServiceImplement implements EmployeeService {
         return employeeRepository.readById(id);
     }
 
-    public Employee readByLogin(String login){
-        if (login == null) {
-            throw new IllegalArgumentException("Le login ne peut pas être vide");
+    public Employee readByLogin(String login, String password) {
+        if (login == null || password == null) {
+            throw new IllegalArgumentException("Le login et le mot de passe ne peuvent pas être vide");
         }
-        return employeeRepository.readByLogin(login);
+        return employeeRepository.readByLogin(login, password);
     }
 
     public List<Employee> readByService(Long servicesId){
