@@ -138,6 +138,9 @@ public class EmployeeRepository {
             employee.setPassword(rs.getString("emp_password"));
             employee.setPhoto(rs.getString("emp_photo"));
             employee.setAdminPassword(rs.getString("emp_admin_password"));
+            employee.setServiceName(rs.getString("ser_name"));
+            employee.setSiteName(rs.getString("sit_name"));
+            employee.setSiteCity(rs.getString("sit_city"));
 
             return employee;
         }

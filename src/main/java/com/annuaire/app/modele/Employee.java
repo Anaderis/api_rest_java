@@ -36,6 +36,35 @@ public class Employee {
 
     private Long siteId; // ID du site
     private Long servicesId; // ID du service
+    private String siteName;
+    private String serviceName;
+    private String siteCity;
+
+
+    public String getSiteCity() {
+        return siteCity;
+    }
+
+    public void setSiteCity(String siteCity) {
+        this.siteCity = siteCity;
+    }
+
+    public String getSiteName() {
+        return siteName;
+    }
+
+    public void setSiteName(String siteName) {
+        this.siteName = siteName;
+    }
+
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
 
     public Long getId() {
         return id;
